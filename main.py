@@ -14,6 +14,7 @@ power_mean= data["PowerOriginal"].mean()
 power_max= data["PowerOriginal"].max()
 heartrate_mean= data["HeartRate"].mean()
 heartrate_max= data["HeartRate"].max()
+heartrate_input = st.number_input("Max Heartrate eingeben:", value=heartrate_max)
 
 
 #Plot erstellen
@@ -25,12 +26,12 @@ fig2.update_traces(line=dict(color="red"))
 fig.add_traces(fig2.data)
 
 #Zonen Ober und Untergrenzen
-zone_0 = 0.5*heartrate_max
-zone_1 = 0.6*heartrate_max
-zone_2 = 0.7*heartrate_max
-zone_3 = 0.8*heartrate_max
-zone_4 = 0.9*heartrate_max
-zone_5 = heartrate_max
+zone_0 = 0.5*heartrate_input
+zone_1 = 0.6*heartrate_input
+zone_2 = 0.7*heartrate_input
+zone_3 = 0.8*heartrate_input
+zone_4 = 0.9*heartrate_input
+zone_5 = heartrate_input
 
 #Zone 1-5 Erstellen
 filtered_data_1 = data[(data["HeartRate"]> zone_0)& (data["HeartRate"]< zone_1)]
