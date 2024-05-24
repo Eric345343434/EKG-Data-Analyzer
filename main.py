@@ -5,7 +5,7 @@ import numpy as np
 
 
 
-#Plot
+#Plot je nach Auswahl erstellen
 
 column_names = ["Duration","Distance","OriginalPace","HeartRate","Cadence","PowerOriginal","CalculatedPace","CalculatedStrideLength","CalculatedAerobicEfficiencyPace","CalculatedAerobicEfficiencyPower","CalculatedEfficiencyIndex"]
 data= pd.read_csv("activity.csv")
@@ -24,7 +24,6 @@ fig2 = px.line(data["HeartRate"])
 fig.update_layout(xaxis_title="Time (s)", yaxis_title="Power (Watt), Heartrate(Hz)")
 fig2.update_traces(line=dict(color="red"))
 fig.add_traces(fig2.data)
-
 
 
 
