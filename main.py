@@ -14,7 +14,7 @@ power_mean= data["PowerOriginal"].mean()
 power_max= data["PowerOriginal"].max()
 heartrate_mean= data["HeartRate"].mean()
 heartrate_max= data["HeartRate"].max()
-heartrate_input = st.number_input("Max Heartrate eingeben:", value=heartrate_max)
+
 
 
 #Plot erstellen
@@ -25,6 +25,25 @@ fig.update_layout(xaxis_title="Time (s)", yaxis_title="Power (Watt), Heartrate(H
 fig2.update_traces(line=dict(color="red"))
 fig.add_traces(fig2.data)
 
+
+
+
+
+
+
+
+
+
+
+#Mittelwert und Maximum ausgeben
+st.title("Leistung und Herzrate")
+st.plotly_chart(fig)
+st.write("Mittelewert Leistung =",round(power_mean), "Maximale Leistung =",round(power_max))
+st.write("Mittelwert Herzrate =",round(heartrate_mean), "Maximale Herzrate =",round(heartrate_max))
+
+
+st.subheader("Tabelle der verschiedenen Anstrengunszonen")
+heartrate_input = st.number_input("Max Heartrate eingeben:", value=heartrate_max)
 #Zonen Ober und Untergrenzen
 zone_0 = 0.5*heartrate_input
 zone_1 = 0.6*heartrate_input
@@ -55,21 +74,6 @@ time_2 = filtered_data_2["Duration"].sum()
 time_3 = filtered_data_3["Duration"].sum()
 time_4 = filtered_data_4["Duration"].sum()
 time_5 = filtered_data_5["Duration"].sum()
-
-
-
-
-
-
-
-
-
-#Mittelwert und Maximum ausgeben
-st.title("Leistung und Herzrate")
-st.plotly_chart(fig)
-st.write("Mittelewert Leistung =",round(power_mean), "Maximale Leistung =",round(power_max))
-st.write("Mittelwert Herzrate =",round(heartrate_mean), "Maximale Herzrate =",round(heartrate_max))
-
 #Tabelle der verschiedenen Zonen erstellen
 table= pd.DataFrame({\
     "Zone" : ["Zone 1", "Zone 2", "Zone 3", "Zone 4", "Zone 5"],
@@ -77,6 +81,5 @@ table= pd.DataFrame({\
     "Durschnittliche Leistung(W)": [round(mean_1),round(mean_2),round(mean_3),round(mean_4),round(mean_5)]
 })\
 
-st.subheader("Tabelle der verschiedenen Anstrengunszonen")
 st.dataframe(table)
 
