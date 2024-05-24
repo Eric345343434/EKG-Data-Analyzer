@@ -5,7 +5,9 @@ import numpy as np
 
 
 
-#Plot je nach Auswahl erstellen
+st.title("Interaktiver Plot")
+#Plot
+
 
 column_names = ["Duration","Distance","OriginalPace","HeartRate","Cadence","PowerOriginal","CalculatedPace","CalculatedStrideLength","CalculatedAerobicEfficiencyPace","CalculatedAerobicEfficiencyPower","CalculatedEfficiencyIndex"]
 data= pd.read_csv("activity.csv")
@@ -34,8 +36,9 @@ fig.add_traces(fig2.data)
 
 
 
+
 #Mittelwert und Maximum ausgeben
-st.title("Leistung und Herzrate")
+st.header("Leistung und Herzrate")
 st.plotly_chart(fig)
 st.write("Mittelewert Leistung =",round(power_mean), "Maximale Leistung =",round(power_max))
 st.write("Mittelwert Herzrate =",round(heartrate_mean), "Maximale Herzrate =",round(heartrate_max))
@@ -73,6 +76,7 @@ time_2 = filtered_data_2["Duration"].sum()
 time_3 = filtered_data_3["Duration"].sum()
 time_4 = filtered_data_4["Duration"].sum()
 time_5 = filtered_data_5["Duration"].sum()
+
 #Tabelle der verschiedenen Zonen erstellen
 table= pd.DataFrame({\
     "Zone" : ["Zone 1", "Zone 2", "Zone 3", "Zone 4", "Zone 5"],
