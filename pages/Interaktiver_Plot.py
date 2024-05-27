@@ -10,7 +10,7 @@ st.title("Interaktiver Plot")
 
 
 column_names = ["Duration","Distance","OriginalPace","HeartRate","Cadence","PowerOriginal","CalculatedPace","CalculatedStrideLength","CalculatedAerobicEfficiencyPace","CalculatedAerobicEfficiencyPower","CalculatedEfficiencyIndex"]
-data= pd.read_csv("activity.csv")
+data= pd.read_csv("Data/activity.csv")
 print(data)
 power_mean= data["PowerOriginal"].mean()
 power_max= data["PowerOriginal"].max()

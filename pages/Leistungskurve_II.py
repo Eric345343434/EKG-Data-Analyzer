@@ -8,7 +8,7 @@ st.title("Leistungskurve II")
 
 
 
-data= pd.read_csv("activity.csv")
+data= pd.read_csv("Data/activity.csv")
 data.replace(np.nan,0, inplace=True)
 
 print(data["PowerOriginal"].values[0])
