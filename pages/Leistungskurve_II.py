@@ -36,6 +36,6 @@ table =pd.DataFrame({
         "Leistung" : power_lvs,
 })
 
-st.dataframe(table)
+st.dataframe(table, hide_index=True)
 
 
