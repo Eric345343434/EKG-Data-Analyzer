@@ -37,6 +37,7 @@ class person:
             list_of_names.append(eintrag["lastname"] + ", " +  eintrag["firstname"])
         return list_of_names
 
+    
     def find_person_data_by_name(suchstring):
         """ Eine Funktion der Nachname, Vorname als ein String übergeben wird
         und die die Person als Dictionary zurück gibt"""
@@ -58,6 +59,30 @@ class person:
                 return eintrag
         else:
             return {}
+        
+    def load_by_id(person_id):
+        """A Function that loads a person by ID"""
+        person_data = person.get_person_data()
+        for eintrag in person_data:
+            if eintrag["id"] == person_id:
+                return eintrag
+        else:
+            return {}
+    
+
+    def calc_max_heart_rate(age):
+        """A Function that calculates the max heart rate from the age"""
+        return 220 - age
+
+
+
+    def calc_age(birthdate):
+        """A Function that calculates the age from a birthdate"""
+        today = pd.Timestamp.today()
+        birthdate = pd.to_datetime(birthdate)
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        return age
+
 
     def __init__(self, person_dict) -> None:
         self.date_of_birth = person_dict["date_of_birth"]
@@ -91,6 +116,18 @@ class ekgdata:
         self.date = ekg_dict["date"]
         self.data = ekg_dict["result_link"]
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
+
+    def load_by_id(ekg_id):
+        """A Function that loads a person by ID"""
+        person_data = person.get_person_data()
+        for eintrag in person_data:
+            for test in eintrag["ekg_tests"]:
+                if test["id"]== ekg_id:
+                    return test
+        else:
+            return {}
+
+
 
 
 
