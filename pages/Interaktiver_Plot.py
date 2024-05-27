@@ -79,10 +79,10 @@ time_5 = filtered_data_5["Duration"].sum()
 
 #Tabelle der verschiedenen Zonen erstellen
 table= pd.DataFrame({\
-    "Zone" : ["Zone 1", "Zone 2", "Zone 3", "Zone 4", "Zone 5"],
+    "Zone" : ["1", "2", "3", "4", "5"],
     "Zeit in der Zone(s)":[time_1, time_2, time_3, time_4, time_5],
     "Durschnittliche Leistung(W)": [round(mean_1),round(mean_2),round(mean_3),round(mean_4),round(mean_5)]
 })\
 
-st.dataframe(table)
+st.dataframe(table, hide_index= True)
 

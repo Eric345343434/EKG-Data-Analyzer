@@ -2,20 +2,22 @@ import json
 import pandas as pd
 def hold_power(values, times, power_lv):
     held_time = []
-    start= 0
-    for value,time in zip(values,times):
-        if value <  power_lv:
+    start = None
+    end = None
+
+    for value, time in zip(values, times):
+
+        if value >= power_lv and start is None:
             start = time
-        if value > power_lv:
+
+        if value < power_lv and end is None and start is not None:
             end = time
             held_time.append(end-start)
-    return max(held_time) 
+            start = None
+            end = None
 
-value =[1,2,3,4,5,6,7,8]
-time = [1,2,3,4,5,6,7,8]
-power_lv = 2
+    return max(held_time)
 
-print(hold_power(value,time,power_lv))
 #%%
 
 class person:

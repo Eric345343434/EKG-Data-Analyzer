@@ -2,26 +2,11 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import numpy as np
+from function import hold_power
 
 st.title("Leistungskurve II")
 
-def hold_power(values, times, power_lv):
-    held_time = []
-    start = None
-    end = None
 
-    for value, time in zip(values, times):
-
-        if value >= power_lv and start is None:
-            start = time
-
-        if value < power_lv and end is None and start is not None:
-            end = time
-            held_time.append(end-start)
-            start = None
-            end = None
-
-    return max(held_time)
 
 data= pd.read_csv("activity.csv")
 data.replace(np.nan,0, inplace=True)
@@ -46,5 +31,11 @@ fig5 = px.line(x=durations, y=power_lvs)
 fig5.update_layout(xaxis_title="Time", yaxis_title="Power (Watts)")
 st.plotly_chart(fig5)
 
+table =pd.DataFrame({
+        "Zeit" : durations,
+        "Leistung" : power_lvs,
+})
+
+st.dataframe(table)
 
 
