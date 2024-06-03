@@ -18,7 +18,7 @@ def hold_power(values, times, power_lv):
 
     return max(held_time)
 
-#%%
+
 
 class person:
 
@@ -68,8 +68,12 @@ class person:
                 return eintrag
         else:
             return {}
-    
-
+    def get_person_id(person_data):
+        """A Function that takes the persons-dictionary and returns a list auf all person id"""
+        list_of_id = []
+        for eintrag in person_data:
+            list_of_id.append(eintrag["id"])
+        return list_of_id
     def calc_max_heart_rate(age):
         """A Function that calculates the max heart rate from the age"""
         return 220 - age
@@ -116,6 +120,29 @@ class ekgdata:
         self.date = ekg_dict["date"]
         self.data = ekg_dict["result_link"]
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
+        self.peaks = self.find_peaks()
+    
+    def find_peaks(self, threshold=340, respacing_factor=5):
+        series = self.df["EKG in mV"]
+        # Respace the series
+        series = series.iloc[::respacing_factor]
+        
+        # Filter the series
+        series = series[series>threshold]
+
+        peaks = []
+        last = 0
+        current = 0
+        next = 0
+
+        for index, row in series.items():
+            last = current
+            current = next
+            next = row
+
+            if last < current and current > next and current > threshold:
+                peaks.append(index-respacing_factor)
+        return peaks
 
     def load_by_id(ekg_id):
         """A Function that loads a person by ID"""
@@ -126,8 +153,16 @@ class ekgdata:
                     return test
         else:
             return {}
+        
 
 
+
+    def get_ids(person_data):
+        ekg_ids=[]
+        for eintrag in person_data:
+            ekg_ids.append(eintrag["id"])
+        return ekg_ids
+    
 
 
 
@@ -139,5 +174,9 @@ if __name__ == "__main__":
     print(ekg_dict)
     ekg = ekgdata(ekg_dict)
     print(ekg.df.head())
+    ekg_dict = person_data[0]["ekg_tests"][0]
+    print(ekg_dict)
+    ekg = ekgdata(ekg_dict)
+    print(ekg.peaks)
 
 
