@@ -144,6 +144,17 @@ class ekgdata:
                 peaks.append(index-respacing_factor)
         return peaks
 
+    def estimate_hr(peaks):
+        if len(peaks) < 2:
+             return 0  # No valid heart rate can be calculated with less than 2 peaks
+
+        total_time = 0
+        for i in range(len(peaks) - 1):
+            total_time += peaks[i + 1] - peaks[i]
+
+        heart_rate = len(peaks) / (total_time / 1000)  # Convert milliseconds to seconds
+        return heart_rate
+
     def load_by_id(ekg_id):
         """A Function that loads a person by ID"""
         person_data = person.get_person_data()
@@ -177,6 +188,5 @@ if __name__ == "__main__":
     ekg_dict = person_data[0]["ekg_tests"][0]
     print(ekg_dict)
     ekg = ekgdata(ekg_dict)
-    print(ekg.peaks)
 
 
