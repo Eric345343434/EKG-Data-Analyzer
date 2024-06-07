@@ -122,7 +122,7 @@ class ekgdata:
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
         self.peaks = self.find_peaks()
     
-    def find_peaks(self, threshold=340, respacing_factor=5):
+    def find_peaks(self, threshold=340, respacing_factor=1):
         series = self.df["EKG in mV"]
         # Respace the series
         series = series.iloc[::respacing_factor]
@@ -146,14 +146,24 @@ class ekgdata:
 
     def estimate_hr(peaks):
         if len(peaks) < 2:
-             return 0  # No valid heart rate can be calculated with less than 2 peaks
+            return None  # Not enough peaks to estimate heart rate
 
-        total_time = 0
-        for i in range(len(peaks) - 1):
-            total_time += peaks[i + 1] - peaks[i]
+        # Calculate the time difference between consecutive peaks
+        time_differences = [peaks[i] - peaks[i-1] for i in range(1, len(peaks))]
+        print(time_differences)
 
-        heart_rate = len(peaks) / (total_time / 1000)  # Convert milliseconds to seconds
+        # Calculate the average time difference
+        avg_time_diff = sum(time_differences) / len(time_differences)
+
+        # Convert the average time difference to seconds
+        avg_time_diff_s = avg_time_diff / 1000  # Assuming the time is in milliseconds
+        print(avg_time_diff_s)
+
+        # Calculate the heart rate in beats per minute
+        heart_rate = 60 / avg_time_diff_s
+
         return heart_rate
+    
 
     def load_by_id(ekg_id):
         """A Function that loads a person by ID"""
