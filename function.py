@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import plotly.express as px
 def hold_power(values, times, power_lv):
     held_time = []
     start = None
@@ -122,7 +123,7 @@ class ekgdata:
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
         self.peaks = self.find_peaks()
     
-    def find_peaks(self, threshold=340, respacing_factor=1):
+    def find_peaks(self, threshold=340, respacing_factor=2):
         series = self.df["EKG in mV"]
         # Respace the series
         series = series.iloc[::respacing_factor]
@@ -164,7 +165,15 @@ class ekgdata:
 
         return heart_rate
     
+    def plot_ekg_with_peaks(self):
+        df = self.df.copy()
+        df['Peaks'] = 0
+        valid_peaks = [p for p in self.peaks if p in df.index]
+        df.loc[valid_peaks, 'Peaks'] = 1
 
+        fig = px.line(df, x='Time in ms', y='EKG in mV', title='EKG Data with Peaks')
+        fig.add_scatter(x=df.loc[valid_peaks, 'Time in ms'], y=df.loc[valid_peaks, 'EKG in mV'], mode='markers', name='Peaks', marker=dict(color='red'))
+        return fig
     def load_by_id(ekg_id):
         """A Function that loads a person by ID"""
         person_data = person.get_person_data()

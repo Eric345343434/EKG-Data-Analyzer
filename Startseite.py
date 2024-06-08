@@ -66,14 +66,16 @@ st.session_state.current_ekg_id = st.selectbox( "", options = st.session_state.c
 
 st.write("Derzeit ist der Ekg_Test mit der ID", st.session_state.current_ekg_id ,"von", st.session_state.current_user,"ausgewählt")
 
-st.write(ekgdata.load_by_id(st.session_state.current_ekg_id))
-    
-st.markdown()
 
 
 
+ekg_dict = ekgdata.load_by_id(st.session_state.current_ekg_id)
 
-# Anlegen des Session State. Bild, wenn es kein Bild gibt
+ekgdata1= ekgdata(ekg_dict)
+peaks = ekgdata1.find_peaks()
+st.write( ekgdata.estimate_hr(peaks))
+# Plot EKG data with peaks
+st.plotly_chart(ekgdata1.plot_ekg_with_peaks())
 
 
 
