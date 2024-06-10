@@ -178,7 +178,11 @@ class ekgdata:
 
         return peaks_index
    
-
+    def calc_duration(self):
+        """A Function that calculates the duration of the EKG-Test"""
+        return (self.df["Time in ms"].iloc[-1] - self.df["Time in ms"].iloc[0]) / 1000
+        
+    
     def estimate_hr(peaks):
         if len(peaks) < 2:
             return None  # Not enough peaks to estimate heart rate
@@ -239,12 +243,7 @@ if __name__ == "__main__":
     file = open("data/person_db.json")
     person_data = json.load(file)
     ekg_dict = person_data[0]["ekg_tests"][0]
-    print(ekg_dict)
-    ekg = ekgdata(ekg_dict)
-    print(ekg.df.head())
-    ekg_dict = person_data[0]["ekg_tests"][0]
-    print(ekg_dict)
-    ekg = ekgdata(ekg_dict)
+  
 
 
 
