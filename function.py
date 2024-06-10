@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import plotly.express as px
+import numpy as np
 def hold_power(values, times, power_lv):
     held_time = []
     start = None
@@ -122,16 +123,19 @@ class ekgdata:
         self.data = ekg_dict["result_link"]
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
         self.peaks = self.find_peaks()
+        self.peaks_index = self.find_peaks_index()
     
-    def find_peaks(self, threshold=340, respacing_factor=1):
+    def find_peaks(self, threshold=340, respacing_factor=1 ):
         series = self.df["EKG in mV"]
         # Respace the series
+    
         series = series.iloc[::respacing_factor]
         
         # Filter the series
         series = series[series>threshold]
 
         peaks = []
+        peaks_index = []
         last = 0
         current = 0
         next = 0
@@ -141,20 +145,54 @@ class ekgdata:
             current = next
             next = row
 
-            if last < current and current > next and current > threshold:
-                peaks.append(index-respacing_factor)
+            if last < current and current >= next and current > threshold:
+                     peaks.append(self.df["Time in ms"][index])
+                     peaks_index.append(index)
+            
+
+
         return peaks
+    def find_peaks_index(self, threshold=340, respacing_factor=1 ):
+        series = self.df["EKG in mV"]
+        # Respace the series
+    
+        series = series.iloc[::respacing_factor]
+        
+        # Filter the series
+        series = series[series>threshold]
+
+        peaks_index = []
+        last = 0
+        current = 0
+        next = 0
+
+        for index, row in series.items():
+            last = current
+            current = next
+            next = row
+
+            if last < current and current >= next and current > threshold:
+                     peaks_index.append(index)
+            
+
+
+        return peaks_index
+   
 
     def estimate_hr(peaks):
         if len(peaks) < 2:
             return None  # Not enough peaks to estimate heart rate
 
         # Calculate the time difference between consecutive peaks
-        time_differences = [peaks[i] - peaks[i-1] for i in range(1, len(peaks))]
+        time_differences = []
+        for i in range(1, len(peaks)):
+            time_difference= peaks[i] - peaks[i-1]
+            if time_difference > 200:
+                time_differences.append(time_difference)
         print(time_differences)
-
         # Calculate the average time difference
         avg_time_diff = sum(time_differences) / len(time_differences)
+        print(avg_time_diff)
 
         # Convert the average time difference to seconds
         avg_time_diff_s = avg_time_diff / 1000  # Assuming the time is in milliseconds
@@ -165,10 +203,10 @@ class ekgdata:
 
         return heart_rate
     
-    def plot_ekg_with_peaks(self):
-        df = self.df.copy()
+    def plot_ekg_with_peaks(self,start,end):
+        df = self.df.copy()[start:end]
         df['Peaks'] = 0
-        valid_peaks = [p for p in self.peaks if p in df.index]
+        valid_peaks = [p for p in self.peaks_index if p in df.index]
         df.loc[valid_peaks, 'Peaks'] = 1
 
         fig = px.line(df, x='Time in ms', y='EKG in mV', title='EKG Data with Peaks')
@@ -207,5 +245,6 @@ if __name__ == "__main__":
     ekg_dict = person_data[0]["ekg_tests"][0]
     print(ekg_dict)
     ekg = ekgdata(ekg_dict)
+
 
 

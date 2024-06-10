@@ -74,13 +74,14 @@ st.write("Derzeit ist der Ekg_Test mit der ID", st.session_state.current_ekg_id 
 
 
 ekg_dict = ekgdata.load_by_id(st.session_state.current_ekg_id)
-st.write(ekg_dict["date"])
+st.write("Datum des Ekg-Tests =",ekg_dict["date"])
 
 ekgdata1= ekgdata(ekg_dict)
 peaks = ekgdata1.find_peaks()
 st.write( ekgdata.estimate_hr(peaks))
+
 # Plot EKG data with peaks
-st.plotly_chart(ekgdata1.plot_ekg_with_peaks())
+st.plotly_chart(ekgdata1.plot_ekg_with_peaks(0,1000000))
 
 
 
