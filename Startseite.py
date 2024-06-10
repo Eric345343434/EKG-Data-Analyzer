@@ -40,7 +40,7 @@ st.session_state.current_user = st.selectbox(
 
 current_user_list = person.find_person_data_by_name(st.session_state.current_user) 
 current_user_id = int(current_user_list["id"])
-current_ekg_list = current_user_list["ekg_tests"]
+
 
 # Suche den Pfad zum Bild, aber nur wenn der Name bekannt ist
 if st.session_state.current_user in person_names_list:
@@ -49,15 +49,19 @@ if st.session_state.current_user in person_names_list:
     st.image(image, caption=st.session_state.current_user)
 
 
-
-
+st.write("Geburtsjahr =",  current_user_list["date_of_birth"])
 st.write(st.session_state.current_user,"wird zurzeit gewählt")
 
+current_ekg_list = current_user_list["ekg_tests"]
 
 st.session_state.current_ekg_list_id = ekgdata.get_ids(current_ekg_list)
 
 st.write("## Ekg-Test auswählen") 
 st.session_state.current_ekg_id = st.selectbox( "", options = st.session_state.current_ekg_list_id, key= "ekg_tests")	
+
+
+
+
 
 
 
@@ -70,6 +74,7 @@ st.write("Derzeit ist der Ekg_Test mit der ID", st.session_state.current_ekg_id 
 
 
 ekg_dict = ekgdata.load_by_id(st.session_state.current_ekg_id)
+st.write(ekg_dict["date"])
 
 ekgdata1= ekgdata(ekg_dict)
 peaks = ekgdata1.find_peaks()

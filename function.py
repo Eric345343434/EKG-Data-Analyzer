@@ -123,7 +123,7 @@ class ekgdata:
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
         self.peaks = self.find_peaks()
     
-    def find_peaks(self, threshold=340, respacing_factor=2):
+    def find_peaks(self, threshold=340, respacing_factor=1):
         series = self.df["EKG in mV"]
         # Respace the series
         series = series.iloc[::respacing_factor]
