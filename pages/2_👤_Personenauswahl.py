@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 
 
-st.title("Wilkommen bei  unserer Startseite") 
 
 person_data = person.get_person_data()
 person_names_list = person.get_person_names(person_data)
@@ -13,8 +12,7 @@ person_names_list = person.get_person_names(person_data)
 
 
 
-# Eine Überschrift der ersten Ebene
-st.write("# EKG APP")
+
 
 #St.session_state werden abgefragt
 if "current-user" not in st.session_state:

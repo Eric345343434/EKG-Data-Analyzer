@@ -35,11 +35,7 @@ try:
     st.write("Heartrate:", ekgdata.estimate_hr(peaks))
 
 
-    user_input_ekg_start= int(st.slider("Geben sie den Start Wert des Plots an",0, len(ekgdata1.df["Time in ms"]),0,))
-    user_input_ekg_end= int(st.slider("Geben sie den End Wert des Plots an",0, len(ekgdata1.df["Time in ms"]),10000))
-
-    # Plot EKG data with peaks
-    st.plotly_chart(ekgdata1.plot_ekg_with_peaks(user_input_ekg_start,user_input_ekg_end))
+    
 
 except AttributeError:
     st.title("Wählen sie zuerst die Person aus")
