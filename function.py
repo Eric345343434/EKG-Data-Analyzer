@@ -1,36 +1,34 @@
-import json
 import pandas as pd
 import plotly.express as px
-import numpy as np
+from tinydb import TinyDB, Query
+from tinydb.table import Table, Document
+
 def hold_power(values, times, power_lv):
     held_time = []
     start = None
     end = None
 
     for value, time in zip(values, times):
-
         if value >= power_lv and start is None:
             start = time
-
         if value < power_lv and end is None and start is not None:
             end = time
-            held_time.append(end-start)
+            held_time.append(end - start)
             start = None
             end = None
 
     return max(held_time)
 
+class Person:
 
+    @staticmethod
+    def get_person_data() -> Table:
+        """ A `staticmethod` that knows where the person Database is and returns a TinyDB-Table with the Persons """
+        
+        return TinyDB("data/person_db.json").table("persons")
+        
 
-class person:
-
-
-    def get_person_data():
-        """A Function that knows where te person Database is and returns a Dictionary with the Persons"""
-        file = open("data/person_db.json")
-        person_data = json.load(file)
-        return person_data
-
+    @staticmethod
     def get_person_names(person_data):
         """A Function that takes the persons-dictionary and returns a list auf all person names"""
         list_of_names = []
@@ -38,107 +36,74 @@ class person:
         for eintrag in person_data:
             list_of_names.append(eintrag["lastname"] + ", " +  eintrag["firstname"])
         return list_of_names
-
     
-    def find_person_data_by_name(suchstring):
+    @staticmethod
+    def find_person_data_by_name(suchstring) -> dict:
         """ Eine Funktion der Nachname, Vorname als ein String übergeben wird
         und die die Person als Dictionary zurück gibt"""
-        
-        person_data = person.get_person_data()
-        #print(suchstring)
+        person_data = Person.get_person_data()
         if suchstring == "None":
             return {}
 
-        two_names = suchstring.split(", ")
-        vorname = two_names[1]
-        nachname = two_names[0]
-
-        for eintrag in person_data:
-            print(eintrag)
-            if (eintrag["lastname"] == nachname and eintrag["firstname"] == vorname):
-                print()
-
-                return eintrag
+        lastname, firstname = suchstring.split(", ")
+        PersonQuery = Query()
+        found_list = person_data.search((PersonQuery.lastname == lastname) and (PersonQuery.firstname == firstname))
+        if found_list == []:
+            return None
         else:
-            return {}
-        
-    def load_by_id(person_id):
-        """A Function that loads a person by ID"""
-        person_data = person.get_person_data()
-        for eintrag in person_data:
-            if eintrag["id"] == person_id:
-                return eintrag
-        else:
-            return {}
+            return found_list
+
+    
+    @staticmethod
+    def load_by_id(person_id) -> dict:
+        ''' A `staticmethod` that loads a person by id '''
+        try:
+            person = Person.get_person_data().get(doc_id=person_id)
+            return person
+        except:
+            raise ValueError("Person with ID {} not found".format(id))
+
+    @staticmethod
     def get_person_id(person_data):
-        """A Function that takes the persons-dictionary and returns a list auf all person id"""
-        list_of_id = []
-        for eintrag in person_data:
-            list_of_id.append(eintrag["id"])
-        return list_of_id
+        """Returns a list of all person IDs."""
+        return [entry['id'] for entry in person_data]
+
+    @staticmethod
     def calc_max_heart_rate(age):
-        """A Function that calculates the max heart rate from the age"""
+        """Calculates the max heart rate from the age."""
         return 220 - age
 
-
-
+    @staticmethod
     def calc_age(birthdate):
-        """A Function that calculates the age from a birthdate"""
+        """Calculates the age from a birthdate."""
         today = pd.Timestamp.today()
         birthdate = pd.to_datetime(birthdate)
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
         return age
 
-
-    def __init__(self, person_dict) -> None:
+    def __init__(self, person_dict):
         self.date_of_birth = person_dict["date_of_birth"]
         self.firstname = person_dict["firstname"]
         self.lastname = person_dict["lastname"]
         self.picture_path = person_dict["picture_path"]
         self.id = person_dict["id"]
 
-if __name__ == "__main__":
-    print("This is a module with some functions to read the person data")
-    persons = person.get_person_data()
-    person_names = person.get_person_names(persons)
-    print(person_names)
-    print(person.find_person_data_by_name("Huber, Julian"))
-
-
-
-
-
-# %% Objekt-Welt
-
-# Klasse EKG-Data für Peakfinder, die uns ermöglicht peaks zu finden
-
-class ekgdata:
-
-## Konstruktor der Klasse soll die Daten einlesen
-
+class EkgData:
     def __init__(self, ekg_dict):
-        pass
         self.id = ekg_dict["id"]
         self.date = ekg_dict["date"]
         self.data = ekg_dict["result_link"]
-        self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV','Time in ms',])
+        self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV', 'Time in ms'])
         self.peaks = self.find_peaks()
         self.peaks_index = self.find_peaks_index()
-    
-    def find_peaks(self, threshold=340, respacing_factor=1 ):
+
+    def find_peaks(self, threshold=340, respacing_factor=1):
         series = self.df["EKG in mV"]
-        # Respace the series
-    
         series = series.iloc[::respacing_factor]
-        
-        # Filter the series
-        series = series[series>threshold]
+        series = series[series > threshold]
 
         peaks = []
-        peaks_index = []
-        last = 0
-        current = 0
-        next = 0
+        last = current = next = 0
 
         for index, row in series.items():
             last = current
@@ -146,25 +111,17 @@ class ekgdata:
             next = row
 
             if last < current and current >= next and current > threshold:
-                     peaks.append(self.df["Time in ms"][index])
-                     peaks_index.append(index)
-            
-
+                peaks.append(self.df["Time in ms"][index])
 
         return peaks
-    def find_peaks_index(self, threshold=340, respacing_factor=1 ):
+
+    def find_peaks_index(self, threshold=340, respacing_factor=1):
         series = self.df["EKG in mV"]
-        # Respace the series
-    
         series = series.iloc[::respacing_factor]
-        
-        # Filter the series
-        series = series[series>threshold]
+        series = series[series > threshold]
 
         peaks_index = []
-        last = 0
-        current = 0
-        next = 0
+        last = current = next = 0
 
         for index, row in series.items():
             last = current
@@ -172,42 +129,27 @@ class ekgdata:
             next = row
 
             if last < current and current >= next and current > threshold:
-                     peaks_index.append(index)
-            
-
+                peaks_index.append(index)
 
         return peaks_index
-   
+
     def calc_duration(self):
-        """A Function that calculates the duration of the EKG-Test"""
+        """Calculates the duration of the EKG-Test."""
         return (self.df["Time in ms"].iloc[-1] - self.df["Time in ms"].iloc[0]) / 1000
-        
-    
+
+    @staticmethod
     def estimate_hr(peaks):
         if len(peaks) < 2:
-            return None  # Not enough peaks to estimate heart rate
+            return None
 
-        # Calculate the time difference between consecutive peaks
-        time_differences = []
-        for i in range(1, len(peaks)):
-            time_difference= peaks[i] - peaks[i-1]
-            if time_difference > 200:
-                time_differences.append(time_difference)
-        print(time_differences)
-        # Calculate the average time difference
+        time_differences = [peaks[i] - peaks[i - 1] for i in range(1, len(peaks)) if peaks[i] - peaks[i - 1] > 200]
         avg_time_diff = sum(time_differences) / len(time_differences)
-        print(avg_time_diff)
-
-        # Convert the average time difference to seconds
-        avg_time_diff_s = avg_time_diff / 1000  # Assuming the time is in milliseconds
-        print(avg_time_diff_s)
-
-        # Calculate the heart rate in beats per minute
+        avg_time_diff_s = avg_time_diff / 1000
         heart_rate = 60 / avg_time_diff_s
 
         return heart_rate
-    
-    def plot_ekg_with_peaks(self,start,end):
+
+    def plot_ekg_with_peaks(self, start, end):
         df = self.df.copy()[start:end]
         df['Peaks'] = 0
         valid_peaks = [p for p in self.peaks_index if p in df.index]
@@ -216,34 +158,45 @@ class ekgdata:
         fig = px.line(df, x='Time in ms', y='EKG in mV', title='EKG Data with Peaks')
         fig.add_scatter(x=df.loc[valid_peaks, 'Time in ms'], y=df.loc[valid_peaks, 'EKG in mV'], mode='markers', name='Peaks', marker=dict(color='red'))
         return fig
-    def load_by_id(ekg_id):
-        """A Function that loads a person by ID"""
-        person_data = person.get_person_data()
-        for eintrag in person_data:
-            for test in eintrag["ekg_tests"]:
-                if test["id"]== ekg_id:
-                    return test
-        else:
-            return {}
-        
-
-
-
-    def get_ids(person_data):
-        ekg_ids=[]
-        for eintrag in person_data:
-            ekg_ids.append(eintrag["id"])
-        return ekg_ids
     
+    @staticmethod
+    def load_ekg_table() -> Table:
+        '''Function that knows where the person Database is and returns a TinyDB-Table with EKGs '''
+        return TinyDB("data/person_db.json").table("ekg_tests")
 
+    @staticmethod
+    def load_by_person_id(ekg_id):
+        """Loads an EKG test by ID."""
+        EKGQuery = Query()
+        EKGdata = EkgData.load_ekg_table()
+        found_list = EKGdata.search(EKGQuery.person_id == ekg_id)
+        if found_list == []:
+            return None
+        else:
+            return found_list
 
+    @staticmethod
+    def get_ids(person_data):
+        return [test["id"] for person in person_data for test in person["ekg_tests"]]
 
 if __name__ == "__main__":
-    print("This is a module with some functions to read the EKG data")
-    file = open("data/person_db.json")
-    person_data = json.load(file)
-    ekg_dict = person_data[0]["ekg_tests"][0]
-  
+    print("This is a module with some functions to read the person data")
+    persons = Person.get_person_data()
+    person_names = Person.get_person_names(persons)
+    print(person_names)
+    print(Person.find_person_data_by_name("Huber, Julian"))
+    print("hallo")
+    print(Person.load_by_id(3))
+    print(Person.calc_max_heart_rate(20))
+    print(Person.calc_age("2000-01-01"))
+    print(EkgData.load_ekg_table())
+    print(EkgData.load_by_person_id(1))
+    ekg_dict = persons[0]["ekg_tests"][0]
+    #ekg_instance = EkgData(ekg_dict)
+    #print(ekg_instance.calc_duration())
+
+
+
 
 
 
