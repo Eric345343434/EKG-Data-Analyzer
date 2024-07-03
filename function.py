@@ -19,7 +19,7 @@ def hold_power(values, times, power_lv):
 
     return max(held_time)
 
-class Person:
+class person:
 
     @staticmethod
     def get_person_data() -> Table:
@@ -41,7 +41,7 @@ class Person:
     def find_person_data_by_name(suchstring) -> dict:
         """ Eine Funktion der Nachname, Vorname als ein String übergeben wird
         und die die Person als Dictionary zurück gibt"""
-        person_data = Person.get_person_data()
+        person_data = person.get_person_data()
         if suchstring == "None":
             return {}
 
@@ -58,15 +58,11 @@ class Person:
     def load_by_id(person_id) -> dict:
         ''' A `staticmethod` that loads a person by id '''
         try:
-            person = Person.get_person_data().get(doc_id=person_id)
-            return person
+            persone = person.get_person_data().get(doc_id=person_id)
+            return persone
         except:
             raise ValueError("Person with ID {} not found".format(id))
 
-    @staticmethod
-    def get_person_id(person_data):
-        """Returns a list of all person IDs."""
-        return [entry['id'] for entry in person_data]
 
     @staticmethod
     def calc_max_heart_rate(age):
@@ -88,7 +84,7 @@ class Person:
         self.picture_path = person_dict["picture_path"]
         self.id = person_dict["id"]
 
-class EkgData:
+class ekgdata:
     def __init__(self, ekg_dict):
         self.id = ekg_dict["id"]
         self.date = ekg_dict["date"]
@@ -168,7 +164,7 @@ class EkgData:
     def load_by_person_id(ekg_id):
         """Loads an EKG test by ID."""
         EKGQuery = Query()
-        EKGdata = EkgData.load_ekg_table()
+        EKGdata = ekgdata.load_ekg_table()
         found_list = EKGdata.search(EKGQuery.person_id == ekg_id)
         if found_list == []:
             return None
@@ -181,17 +177,19 @@ class EkgData:
 
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
-    persons = Person.get_person_data()
-    person_names = Person.get_person_names(persons)
+    persons = person.get_person_data()
+    person_names = person.get_person_names(persons)
     print(person_names)
-    print(Person.find_person_data_by_name("Huber, Julian"))
+    print(person.find_person_data_by_name("Huber, Julian"))
     print("hallo")
-    print(Person.load_by_id(3))
-    print(Person.calc_max_heart_rate(20))
-    print(Person.calc_age("2000-01-01"))
-    print(EkgData.load_ekg_table())
-    print(EkgData.load_by_person_id(1))
-    ekg_dict = persons[0]["ekg_tests"][0]
+    print(person.load_by_id(1))
+    print(person.load_by_id(2))
+    print(person.calc_max_heart_rate(20))
+    print(person.calc_age("2000-01-01"))
+
+    print(ekgdata.load_ekg_table())
+    print(ekgdata.load_by_person_id(1))
+    #ekg_dict = persons[0]["ekg_tests"][0]
     #ekg_instance = EkgData(ekg_dict)
     #print(ekg_instance.calc_duration())
 
