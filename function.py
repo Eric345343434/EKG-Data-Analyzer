@@ -24,7 +24,6 @@ class person:
     @staticmethod
     def get_person_data() -> Table:
         """ A `staticmethod` that knows where the person Database is and returns a TinyDB-Table with the Persons """
-        
         return TinyDB("data/person_db.json").table("persons")
         
 
@@ -77,18 +76,20 @@ class person:
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
         return age
 
-    def __init__(self, person_dict):
-        self.date_of_birth = person_dict["date_of_birth"]
-        self.firstname = person_dict["firstname"]
-        self.lastname = person_dict["lastname"]
-        self.picture_path = person_dict["picture_path"]
-        self.id = person_dict["id"]
+    def __init__(self, person_id):
+        person_table = person.get_person_data().get(doc_id=person_id)
+        self.year_of_birth = person_table["year_of_birth"]
+        self.firstname = person_table["firstname"]
+        self.lastname = person_table["lastname"]
+        self.picture_path = person_table["picture_path"]
+        self.id = person_table.doc_id
 
 class ekgdata:
-    def __init__(self, ekg_dict):
-        self.id = ekg_dict["id"]
-        self.date = ekg_dict["date"]
-        self.data = ekg_dict["result_link"]
+    def __init__(self, ekg_dict:int):
+        ekg_table = ekgdata.load_ekg_table()
+        self.id = ekg_table.get(doc_id=ekg_dict).doc_id
+        self.date = ekg_table.get(doc_id=ekg_dict)["date"]
+        self.data = ekg_table.get(doc_id=ekg_dict)["result_link"]
         self.df = pd.read_csv(self.data, sep='\t', header=None, names=['EKG in mV', 'Time in ms'])
         self.peaks = self.find_peaks()
         self.peaks_index = self.find_peaks_index()
@@ -157,11 +158,12 @@ class ekgdata:
     
     @staticmethod
     def load_ekg_table() -> Table:
-        '''Function that knows where the person Database is and returns a TinyDB-Table with EKGs '''
+        '''Function that knows where the person Database is and returns a TinyDB-Table with EKGs
+         -gives Table with all ekg´s '''
         return TinyDB("data/person_db.json").table("ekg_tests")
 
     @staticmethod
-    def load_by_person_id(ekg_id):
+    def load_by_ekg_id(ekg_id:int):
         """Loads an EKG test by ID."""
         EKGQuery = Query()
         EKGdata = ekgdata.load_ekg_table()
@@ -170,10 +172,24 @@ class ekgdata:
             return None
         else:
             return found_list
+        
+    @staticmethod
+    def get_ekg_ids_by_person_id(person_id:int):
+        '''gives all ekg_ids which belong to the given person_id
+        -   list of the coresponding ekgs '''
+        ekg_ids = []
+        for document in ekgdata.load_ekg_table():
+            if document["person_id"] == person_id:
+                ekg_ids.append(document.doc_id)
+        return ekg_ids
 
     @staticmethod
-    def get_ids(person_data):
-        return [test["id"] for person in person_data for test in person["ekg_tests"]]
+    def get_ids():
+        '''Function that returns all IDs of the EKGs'''
+        ids = []
+        for person in ekgdata.load_ekg_table():
+            ids.append(person.doc_id)
+        return ids
 
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
@@ -181,17 +197,20 @@ if __name__ == "__main__":
     person_names = person.get_person_names(persons)
     print(person_names)
     print(person.find_person_data_by_name("Huber, Julian"))
-    print("hallo")
+    print("hallo -----------------")
     print(person.load_by_id(1))
     print(person.load_by_id(2))
     print(person.calc_max_heart_rate(20))
     print(person.calc_age("2000-01-01"))
-
     print(ekgdata.load_ekg_table())
-    print(ekgdata.load_by_person_id(1))
-    #ekg_dict = persons[0]["ekg_tests"][0]
-    #ekg_instance = EkgData(ekg_dict)
-    #print(ekg_instance.calc_duration())
+    print(ekgdata.get_ekg_ids_by_person_id(2))
+    
+    print('create EKGdata object')
+    ekg = ekgdata(5)
+    #print(ekg.__dict__)
+    print(ekg.peaks[:15])
+    print(ekg.estimate_hr(ekg.peaks))
+    print(ekg.get_ids())
 
 
 
