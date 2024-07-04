@@ -89,6 +89,19 @@ class person:
             return None
         else:
             return found_list
+    
+    @staticmethod
+    def add_person(firstname: str, lastname: str, year_of_birth: int, picture_path: str):
+        db = TinyDB("data/person_db.json")
+        person_table = db.table("persons")
+        next_id = str(len(person_table) + 1)
+        person_table.insert({
+            "id": next_id,
+            "year_of_birth": year_of_birth,
+            "firstname": firstname,
+            "lastname": lastname,
+            "picture_path": picture_path
+        })
 
 
     @staticmethod
@@ -221,6 +234,18 @@ class ekgdata:
         for person in ekgdata.load_ekg_table():
             ids.append(person.doc_id)
         return ids
+    
+    @staticmethod
+    def add_ekg_test(person_id: int, date: str, result_link: str):
+        """Adds a new EKG test to the database."""
+        ekg_table = ekgdata.load_ekg_table()
+        new_ekg_id = len(ekg_table) + 1
+        new_ekg_test = {
+            "person_id": person_id,
+            "date": date,
+            "result_link": result_link
+        }
+        ekg_table.insert(Document(new_ekg_test, doc_id=new_ekg_id))
 
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
