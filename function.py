@@ -205,10 +205,13 @@ class ekgdata:
     def get_ekg_ids_by_person_id(person_id:int):
         '''gives all ekg_ids which belong to the given person_id
         -   list of the coresponding ekgs '''
-        ekg_ids = []
+        ekg_ids_1 = []
         for document in ekgdata.load_ekg_table():
             if document["person_id"] == person_id:
-                ekg_ids.append(document.doc_id)
+                ekg_ids_1.append(document.doc_id)
+        ekg_ids=[]
+        for i in range(0, len(ekg_ids_1)):
+            ekg_ids.append(ekg_ids_1[i])            
         return ekg_ids
 
     @staticmethod

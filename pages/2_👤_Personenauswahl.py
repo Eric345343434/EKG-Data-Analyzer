@@ -36,7 +36,7 @@ st.session_state.current_user = st.selectbox(
     options = person_names_list, key="sbVersuchspersons")
 
 st.session_state.current_user_list = person.find_person_data_by_name(st.session_state.current_user) 
-current_user_id = int(person.find_person_id_by_name(st.session_state.current_user))
+st.session_state.current_user_id = int(person.find_person_id_by_name(st.session_state.current_user))
 
 
 # Suche den Pfad zum Bild, aber nur wenn der Name bekannt ist
