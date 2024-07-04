@@ -4,18 +4,20 @@ from PIL import Image
 import matplotlib.pyplot as plt
 
 try:
-    st.session_state.current_ekg_list = st.session_state.current_user_list["ekg_tests"]
+    st.session_state.current_ekg_list = ekgdata.load_by_ekg_id(ekgdata.get_ekg_ids_by_person_id(st.session_state.current_user_list))
 
-    st.session_state.current_ekg_list_id = ekgdata.get_ids(st.session_state.current_ekg_list)
+    st.session_state.current_ekg_list_id = ekgdata.get_ekg_ids_by_person_id(st.session_state.current_ekg_list)
 
     st.write("## Ekg-Test auswählen") 
-    st.session_state.current_ekg_id = st.selectbox( "", options = st.session_state.current_ekg_list_id, key= "ekg_tests")	
-
-
-
-
-
-
+    
+    #st.session_state.current_ekg_id = st.selectbox( "", options = st.session_state.current_ekg_list_id, key= "ekg_tests")
+    
+    st.session_state.current_ekg_id = st.selectbox(
+        "",
+        options=st.session_state.current_ekg_list_id,
+        key="ekg_tests",
+        index=st.session_state.current_ekg_list_id.index(st.session_state.current_ekg_id) if st.session_state.current_ekg_id in st.session_state.current_ekg_list_id else 0
+    )
 
 
 
