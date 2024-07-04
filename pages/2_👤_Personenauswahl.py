@@ -27,7 +27,6 @@ if "id" not in st.session_state:
 
 
 
-
 # Eine Überschrift der zweiten Ebene
 st.write("## Versuchsperson auswählen")
 
@@ -42,10 +41,10 @@ current_user_id = int(person.find_person_id_by_name(st.session_state.current_use
 
 # Suche den Pfad zum Bild, aber nur wenn der Name bekannt ist
 if st.session_state.current_user in person_names_list:
-    image = Image.open(st.session_state.current_user_list.picture_path)
+    image = Image.open(st.session_state.current_user_list['picture_path'])
 # Anzeigen eines Bilds mit Caption
     st.image(image, caption=st.session_state.current_user)
 
 
-st.write("Geburtsjahr =",  st.session_state.current_user_list["date_of_birth"])
+st.write("Geburtsjahr =",  st.session_state.current_user_list["year_of_birth"])
 st.write(st.session_state.current_user,"wird zurzeit gewählt")

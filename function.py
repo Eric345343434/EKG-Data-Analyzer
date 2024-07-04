@@ -50,7 +50,7 @@ class person:
         if found_list == []:
             return None
         else:
-            return found_list
+            return found_list[0]
 
     
     @staticmethod
