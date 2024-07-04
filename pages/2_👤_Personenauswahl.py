@@ -37,12 +37,12 @@ st.session_state.current_user = st.selectbox(
     options = person_names_list, key="sbVersuchspersons")
 
 st.session_state.current_user_list = person.find_person_data_by_name(st.session_state.current_user) 
-current_user_id = int(st.session_state.current_user_list["id"])
+current_user_id = int(person.find_person_id_by_name(st.session_state.current_user))
 
 
 # Suche den Pfad zum Bild, aber nur wenn der Name bekannt ist
 if st.session_state.current_user in person_names_list:
-    image = Image.open(st.session_state.current_user_list["picture_path"])
+    image = Image.open(st.session_state.current_user_list.picture_path)
 # Anzeigen eines Bilds mit Caption
     st.image(image, caption=st.session_state.current_user)
 

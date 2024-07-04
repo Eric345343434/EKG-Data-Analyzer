@@ -61,6 +61,34 @@ class person:
             return persone
         except:
             raise ValueError("Person with ID {} not found".format(id))
+    
+    @staticmethod
+    def find_person_id_by_name(suchstring) -> int:
+        """ Eine Funktion der Nachname, Vorname als ein String übergeben wird
+        und die die Person als Dictionary zurück gibt"""
+        person_data = person.get_person_data()
+        if suchstring == "None":
+            return {}
+
+        lastname, firstname = suchstring.split(", ")
+        PersonQuery = Query()
+        found_list = person_data.search((PersonQuery.lastname == lastname) and (PersonQuery.firstname == firstname))
+        if found_list == []:
+            return None
+        else:
+            return found_list[0].doc_id
+        
+        
+    @staticmethod
+    def find_person_data_by_id(person_id) -> dict:
+        """ Eine Funktion der die ID übergeben wird und die die Person als Dictionary zurück gibt"""
+        person_data = person.get_person_data()
+        PersonQuery = Query()
+        found_list = person_data.search(PersonQuery.id == person_id)
+        if found_list == []:
+            return None
+        else:
+            return found_list
 
 
     @staticmethod
@@ -198,13 +226,15 @@ if __name__ == "__main__":
     print(person_names)
     print(person.find_person_data_by_name("Huber, Julian"))
     print("hallo -----------------")
+    print(person.find_person_id_by_name("Huber, Julian"))
+    print(person.find_person_id_by_name("Schmirander, Yunus"))
+    print(person.find_person_id_by_name("Heyer, Yannic"))
     print(person.load_by_id(1))
     print(person.load_by_id(2))
     print(person.calc_max_heart_rate(20))
     print(person.calc_age("2000-01-01"))
     print(ekgdata.load_ekg_table())
-    print(ekgdata.get_ekg_ids_by_person_id(2))
-    
+    print(ekgdata.get_ekg_ids_by_person_id(1))
     print('create EKGdata object')
     ekg = ekgdata(5)
     #print(ekg.__dict__)
