@@ -102,6 +102,13 @@ class person:
             "lastname": lastname,
             "picture_path": picture_path
         })
+    
+    @staticmethod
+    def delete_person(person_id: int):
+        """Deletes a person and their related EKG tests from the database."""
+        person_table = person.get_person_data()
+        person_table.remove(doc_ids=[person_id])
+        ekgdata.delete_ekg_tests_by_person_id(person_id)
 
 
     @staticmethod
@@ -247,6 +254,13 @@ class ekgdata:
         }
         ekg_table.insert(Document(new_ekg_test, doc_id=new_ekg_id))
 
+    @staticmethod
+    def delete_ekg_tests_by_person_id(person_id: int):
+        """Deletes all EKG tests associated with a given person_id."""
+        ekg_table = ekgdata.load_ekg_table()
+        EKGQuery = Query()
+        ekg_table.remove(EKGQuery.person_id == person_id)
+        
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
     persons = person.get_person_data()
