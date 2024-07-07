@@ -24,7 +24,7 @@ class person:
     @staticmethod
     def get_person_data() -> Table:
         """ A `staticmethod` that knows where the person Database is and returns a TinyDB-Table with the Persons """
-        return TinyDB("data/person_db.json").table("persons")
+        return TinyDB("Data/person_db.json").table("persons")
         
 
     @staticmethod
