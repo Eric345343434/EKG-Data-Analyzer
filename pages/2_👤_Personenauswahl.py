@@ -20,7 +20,7 @@ if "current-user" not in st.session_state:
     st.session_state.current_user ="None"
 
 if 'picture_path' not in st.session_state:
-    st.session_state.picture_path = 'data/pictures/none.jpg'
+    st.session_state.picture_path = 'Data/pictures/none.jpg'
 
 if "id" not in st.session_state:
     st.session_state.id = "None"

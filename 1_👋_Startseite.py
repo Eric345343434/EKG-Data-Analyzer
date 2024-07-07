@@ -11,7 +11,7 @@ st.write("Willkommen auf der Startseite ")
 
 
 # Load the logo image
-logo = Image.open('data/pictures/logo.jpg')
+logo = Image.open('Data\pictures\Logo.jpg')
 
 # Display the logo
 st.image(logo, caption='', use_column_width=True)
