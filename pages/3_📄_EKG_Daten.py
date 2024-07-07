@@ -2,7 +2,6 @@ import streamlit as st
 from function import person,ekgdata
 from PIL import Image
 import matplotlib.pyplot as plt
-try:
     st.session_state.current_ekg_list_id= ekgdata.get_ekg_ids_by_person_id(st.session_state.current_user_id)
     current_ekg_list =[]
     for i in range(0,len(st.session_state.current_ekg_list_id)):
@@ -38,7 +37,6 @@ try:
     st.write("Dauer des Ekg-Tests =",ekgdata1.calc_duration()*1000, "Millisekunden = ", ekgdata1.calc_duration(), "Sekunden = ", ekgdata1.calc_duration()/60, "Minuten")
     peaks = ekgdata1.find_peaks()
     st.write("Heartrate:", ekgdata.estimate_hr(peaks))
-except:
     st.title("EKG-Daten konnten nicht geladen werden!")
     st.header("Versuchen sie zuerst die Person auszuwählen")
 
