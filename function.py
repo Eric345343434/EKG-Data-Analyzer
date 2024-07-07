@@ -92,7 +92,7 @@ class person:
     
     @staticmethod
     def add_person(firstname: str, lastname: str, year_of_birth: int, picture_path: str):
-        db = TinyDB("data/person_db.json")
+        db = TinyDB("Data/person_db.json")
         person_table = db.table("persons")
         next_id = str(len(person_table) + 1)
         person_table.insert({
@@ -208,7 +208,7 @@ class ekgdata:
     def load_ekg_table() -> Table:
         '''Function that knows where the person Database is and returns a TinyDB-Table with EKGs
          -gives Table with all ekg´s '''
-        return TinyDB("data/person_db.json").table("ekg_tests")
+        return TinyDB("Data/person_db.json").table("ekg_tests")
 
     @staticmethod
     def load_by_ekg_id(ekg_id:int):
