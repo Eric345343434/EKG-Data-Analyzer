@@ -48,34 +48,38 @@ except Exception as e:
 st.write("Willkommen auf der Startseite")
 
 # Login-Formular
-if not st.session_state.logged_in:
-    st.title("Login")
-    username = st.text_input("Benutzername")
-    password = st.text_input("Passwort", type="password")
-    
-    if st.button("Login"):
-        if login(username, password):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success("Erfolgreich eingeloggt!")
-            st.experimental_rerun()  # Neuladen der Anwendung für sichtbare Änderungen
-        else:
-            st.error("Ungültige Anmeldeinformationen")
-    
+col1,col2 = st.columns(2)
+
+with col1:
+    if not st.session_state.logged_in:
+        st.title("Login")
+        username = st.text_input("Benutzername")
+        password = st.text_input("Passwort", type="password")
+        
+        if st.button("Login"):
+            if login(username, password):
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.success("Erfolgreich eingeloggt!")
+                st.experimental_rerun()  # Neuladen der Anwendung für sichtbare Änderungen
+            else:
+                st.error("Ungültige Anmeldeinformationen")
+with col2:       
     # Registrierungsformular
-    st.title("Registrieren")
-    reg_username = st.text_input("Neuer Benutzername")
-    reg_password = st.text_input("Neues Passwort", type="password")
-    
-    if st.button("Registrieren"):
-        if register(reg_username, reg_password):
-            st.success("Registrierung erfolgreich! Bitte melden Sie sich an.")
-        else:
-            st.error("Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen.")
+    if not st.session_state.logged_in:
+        st.title("Registrieren")
+        reg_username = st.text_input("Neuer Benutzername")
+        reg_password = st.text_input("Neues Passwort", type="password")
+        
+        if st.button("Registrieren"):
+            if register(reg_username, reg_password):
+                st.success("Registrierung erfolgreich! Bitte melden Sie sich an.")
+            else:
+                st.error("Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen.")
 
 # Anzeigen des Inhalts nach erfolgreichem Login
 if st.session_state.logged_in:
-    st.write(f"Willkommen {st.session_state.username}!")
+    st.header(f"Willkommen {st.session_state.username}!")
     st.write("Du bist erfolgreich eingeloggt!")
 else:
     st.stop()  # Stoppt die weitere Ausführung der Seite, wenn nicht eingeloggt

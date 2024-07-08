@@ -101,26 +101,19 @@ with col2:
      
 
         # Plot EKG data with peaks
-user_input_ekg_start= int(st.slider("Geben sie den Start Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),0, key="user_input_ekg_start_2"))
-user_input_ekg_end= int(st.slider("Geben sie den End Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),1000,key="user_input_ekg_end_2"))
-def df0(ekgdata):
-    df = ekgdata.df.copy()
-    time_difference = df["Time in ms"][1]-df["Time in ms"][0]
-    Time_0=[]
-    z=0
-    for i in range(len(df["Time in ms"])):
-        Time_0.append(z)
-        z += time_difference
-    return Time_0
+st.session_state.user_input_ekg_start= int(st.slider("Geben sie den Start Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),0,))
+st.session_state.user_input_ekg_end= int(st.slider("Geben sie den End Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),1000,))
 
-ekgdata1.df["Time_0"]=df0(ekgdata1)
-ekgdata2.df["Time_0"]=df0(ekgdata2)
 
-df1 = ekgdata1.df.copy()[user_input_ekg_start:user_input_ekg_end]
+ekgdata1.df["Time_0"]=ekgdata1.df0()
+ekgdata2.df["Time_0"]=ekgdata2.df0()
+
+
+df1 = ekgdata1.df.copy()[st.session_state.user_input_ekg_start:st.session_state.user_input_ekg_end]
 df1['Peaks'] = 0
 valid_peaks_1 = [p for p in ekgdata1.peaks_index if p in df1.index]
 df1.loc[valid_peaks_1, 'Peaks'] = 1
-df2 = ekgdata2.df.copy()[user_input_ekg_start:user_input_ekg_end]
+df2 = ekgdata2.df.copy()[st.session_state.user_input_ekg_start:st.session_state.user_input_ekg_end]
 df2['Peaks'] = 0
 valid_peaks_2 = [p for p in ekgdata2.peaks_index if p in df2.index]
 df2.loc[valid_peaks_2, 'Peaks'] = 1
@@ -129,7 +122,7 @@ df2.loc[valid_peaks_2, 'Peaks'] = 1
 fig= go.Figure()
 fig.add_scatter(x=ekgdata1.df[ "Time_0"], y=df1['EKG in mV'], mode='lines', name='EKG-Test 1', marker=dict(color='blue'))
 fig.add_scatter(x=ekgdata2.df[ "Time_0"], y=df2['EKG in mV'], mode='lines', name='EKG-Test 2', marker=dict(color='cyan'))
-fig.add_scatter(x=ekgdata1.df.loc[valid_peaks_1, "Time_0"], y=df1.loc[valid_peaks_1, 'EKG in mV'], mode='markers', name='Peaks 1', marker=dict(color='darkred'))
-fig.add_scatter(x=ekgdata2.df.loc[valid_peaks_2, "Time_0"], y=df2.loc[valid_peaks_2, 'EKG in mV'], mode='markers', name='Peaks 2', marker=dict(color='tomato'))
+fig.add_scatter(x=df1.loc[valid_peaks_1, "Time_0"]-st.session_state.user_input_ekg_start, y=df1.loc[valid_peaks_1, 'EKG in mV'], mode='markers', name='Peaks 1', marker=dict(color='darkred'))
+fig.add_scatter(x=df2.loc[valid_peaks_2, "Time_0"]-st.session_state.user_input_ekg_start, y=df2.loc[valid_peaks_2, 'EKG in mV'], mode='markers', name='Peaks 2', marker=dict(color='tomato'))
 fig.update_layout(xaxis_title="Time (ms)", yaxis_title="EKG (mV)")
 st.plotly_chart(fig)

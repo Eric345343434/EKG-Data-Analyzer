@@ -266,6 +266,21 @@ class ekgdata:
         ekg_table = ekgdata.load_ekg_table()
         EKGQuery = Query()
         ekg_table.remove(EKGQuery.person_id == person_id)
+    
+
+    def df0(self):
+        time = self.df["Time in ms"]
+        time_difference = time[1]-time[0]
+        Time_0=[]
+        for i in range(len(time)):
+            Time_0.append(i)
+            i += time_difference
+        return Time_0
+    def time_dif(self):
+        time = self.df["Time in ms"]
+        time_difference = time[1]-time[0]
+        return time_difference
+
         
 if __name__ == "__main__":
     print("This is a module with some functions to read the person data")
@@ -284,11 +299,13 @@ if __name__ == "__main__":
     print(ekgdata.load_ekg_table())
     print(ekgdata.get_ekg_ids_by_person_id(1))
     print('create EKGdata object')
-    ekg = ekgdata(5)
+    ekg = ekgdata(2)
     #print(ekg.__dict__)
     print(ekg.peaks[:15])
     print(ekg.estimate_hr(ekg.peaks))
     print(ekg.get_ids())
+    print(ekg.time_dif())
+    
 
 
 
