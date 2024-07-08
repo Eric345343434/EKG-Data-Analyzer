@@ -104,6 +104,12 @@ class person:
         })
     
     @staticmethod
+    def update_person(person_id: int, firstname: str, lastname: str, year_of_birth: int, picture_path: str):
+        """Updates the data of an existing person."""
+        person_table = person.get_person_data()
+        person_table.update({'firstname': firstname, 'lastname': lastname, 'year_of_birth': year_of_birth, 'picture_path': picture_path}, doc_ids=[person_id])
+    
+    @staticmethod
     def delete_person(person_id: int):
         """Deletes a person and their related EKG tests from the database."""
         person_table = person.get_person_data()
