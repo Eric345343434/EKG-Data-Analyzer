@@ -1,29 +1,30 @@
 import streamlit as st
-from function import person
 from PIL import Image
 import json
 
-# Funktion zum Laden der Benutzerdaten aus einer JSON-Datei
-def load_users(file_path='users.json'):
+# Laden der Benutzerdaten aus einer JSON-Datei
+def load_users(file_path='Data/users.json'):
     try:
         with open(file_path, 'r') as file:
             return json.load(file)
     except FileNotFoundError:
         return {}
 
-# Funktion zum Speichern der Benutzerdaten in einer JSON-Datei
-def save_users(users, file_path='users.json'):
+# Speichern der Benutzerdaten in einer JSON-Datei
+def save_users(users, file_path='Data/users.json'):
     with open(file_path, 'w') as file:
         json.dump(users, file)
 
-# Benutzer laden
+# Benutzerdaten laden
 users = load_users()
 
+# Funktion zum Einloggen
 def login(username, password):
     if username in users and users[username] == password:
         return True
     return False
 
+# Funktion zum Registrieren neuer Benutzer
 def register(username, password):
     if username in users:
         return False
@@ -31,12 +32,12 @@ def register(username, password):
     save_users(users)
     return True
 
-# Überprüfe, ob der Benutzer eingeloggt ist
+# Überprüfen, ob der Benutzer eingeloggt ist
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.username = ""
 
-# Zeige das Logo
+# Anwendungsstart
 st.title("EKG-Data-Analyzer")
 try:
     logo = Image.open('data/pictures/Logo.jpg')
@@ -46,7 +47,7 @@ except Exception as e:
 
 st.write("Willkommen auf der Startseite")
 
-# Login
+# Login-Formular
 if not st.session_state.logged_in:
     st.title("Login")
     username = st.text_input("Benutzername")
@@ -57,11 +58,11 @@ if not st.session_state.logged_in:
             st.session_state.logged_in = True
             st.session_state.username = username
             st.success("Erfolgreich eingeloggt!")
-            st.experimental_rerun()
+            st.experimental_rerun()  # Neuladen der Anwendung für sichtbare Änderungen
         else:
             st.error("Ungültige Anmeldeinformationen")
     
-    # Registrierung
+    # Registrierungsformular
     st.title("Registrieren")
     reg_username = st.text_input("Neuer Benutzername")
     reg_password = st.text_input("Neues Passwort", type="password")
@@ -72,13 +73,12 @@ if not st.session_state.logged_in:
         else:
             st.error("Benutzername existiert bereits. Bitte wählen Sie einen anderen Benutzernamen.")
 
-
+# Anzeigen des Inhalts nach erfolgreichem Login
 if st.session_state.logged_in:
     st.write(f"Willkommen {st.session_state.username}!")
     st.write("Du bist erfolgreich eingeloggt!")
 else:
-    st.stop()
-
+    st.stop()  # Stoppt die weitere Ausführung der Seite, wenn nicht eingeloggt
 
 
 
