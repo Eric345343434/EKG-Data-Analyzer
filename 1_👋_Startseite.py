@@ -40,7 +40,7 @@ if 'logged_in' not in st.session_state:
 # Anwendungsstart
 st.title("EKG-Data-Analyzer")
 try:
-    logo = Image.open('data/pictures/Logo.jpg')
+    logo = Image.open('Data/pictures/Logo.jpg')
     st.image(logo, caption='', width=logo.width // 4)
 except Exception as e:
     st.error(f"Logo konnte nicht geladen werden: {e}")

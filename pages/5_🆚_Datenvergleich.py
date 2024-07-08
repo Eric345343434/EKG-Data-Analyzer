@@ -126,10 +126,10 @@ valid_peaks_2 = [p for p in ekgdata2.peaks_index if p in df2.index]
 df2.loc[valid_peaks_2, 'Peaks'] = 1
 
 
-fig1= px.line(df1, x=df1.index*2, y='EKG in mV', title='EKG Data with Peaks')
-fig2 = px.line(df2, x=df2.index*2, y='EKG in mV', title='EKG Data with Peaks')
-fig = go.Figure(data= fig1.data + fig2.data)
-fig.add_scatter(x=ekgdata1.df.loc[valid_peaks_1, "Time_0"], y=df1.loc[valid_peaks_1, 'EKG in mV'], mode='markers', name='Peaks 1', marker=dict(color='red'))
-fig.add_scatter(x=ekgdata2.df.loc[valid_peaks_2, "Time_0"], y=df2.loc[valid_peaks_2, 'EKG in mV'], mode='markers', name='Peaks 2', marker=dict(color='green'))
+fig= go.Figure()
+fig.add_scatter(x=ekgdata1.df[ "Time_0"], y=df1['EKG in mV'], mode='lines', name='EKG-Test 1', marker=dict(color='blue'))
+fig.add_scatter(x=ekgdata2.df[ "Time_0"], y=df2['EKG in mV'], mode='lines', name='EKG-Test 2', marker=dict(color='cyan'))
+fig.add_scatter(x=ekgdata1.df.loc[valid_peaks_1, "Time_0"], y=df1.loc[valid_peaks_1, 'EKG in mV'], mode='markers', name='Peaks 1', marker=dict(color='darkred'))
+fig.add_scatter(x=ekgdata2.df.loc[valid_peaks_2, "Time_0"], y=df2.loc[valid_peaks_2, 'EKG in mV'], mode='markers', name='Peaks 2', marker=dict(color='tomato'))
 fig.update_layout(xaxis_title="Time (ms)", yaxis_title="EKG (mV)")
 st.plotly_chart(fig)
