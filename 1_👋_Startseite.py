@@ -38,14 +38,21 @@ if 'logged_in' not in st.session_state:
     st.session_state.username = ""
 
 # Anwendungsstart
-st.title("EKG-Data-Analyzer")
-try:
-    logo = Image.open('Data/pictures/Logo.jpg')
-    st.image(logo, caption='', width=logo.width // 4)
-except Exception as e:
-    st.error(f"Logo konnte nicht geladen werden: {e}")
+st.markdown("<h1 style='text-align: center; color: grey;'>EKG-Data-Analyzer</h1>", unsafe_allow_html=True)
+# Anwendungsstart
 
-st.write("Willkommen auf der Startseite")
+col1,col2 = st.columns(2)
+
+with col1:
+    try:
+        logo = Image.open('Data/pictures/Logo.jpg')
+        st.image(logo, caption='', width=logo.width // 4)
+    except Exception as e:
+        st.error(f"Logo konnte nicht geladen werden: {e}")
+with col2:
+    st.write("Willkommen auf der Startseite")
+    st.write("Um EKG-Daten analysieren zu können, müssen Sie sich anmelden")
+    st.write("Falls Sie noch keinen Account besitzen, registrieren Sie sich bitte.")
 
 # Login-Formular
 col1,col2 = st.columns(2)
