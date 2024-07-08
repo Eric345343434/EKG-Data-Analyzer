@@ -1,6 +1,11 @@
 import streamlit as st
 from function import person, ekgdata
 
+# Überprüfung, ob der Benutzer eingeloggt ist
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.warning("Bitte loggen Sie sich zuerst ein!")
+    st.stop()
+
 # Überprüfen, ob eine Person ausgewählt wurde
 if "current_user" in st.session_state:
     person_name = st.session_state.current_user

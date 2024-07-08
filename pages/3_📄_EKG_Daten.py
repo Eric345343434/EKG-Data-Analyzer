@@ -3,6 +3,10 @@ from function import person,ekgdata
 from PIL import Image
 import matplotlib.pyplot as plt
 
+# Überprüfung, ob der Benutzer eingeloggt ist
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.warning("Bitte loggen Sie sich zuerst ein!")
+    st.stop()
 
 try:
     st.session_state.current_ekg_list_id= ekgdata.get_ekg_ids_by_person_id(st.session_state.current_user_id)

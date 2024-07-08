@@ -2,6 +2,12 @@ import streamlit as st
 from function import person,ekgdata
 from PIL import Image
 import matplotlib.pyplot as plt
+
+# Überprüfung, ob der Benutzer eingeloggt ist
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.warning("Bitte loggen Sie sich zuerst ein!")
+    st.stop()
+
 try:
     ekg_data= ekgdata.load_ekg_table()
     ekg_dict = ekg_data.get(doc_id=str(st.session_state.current_ekg_id))

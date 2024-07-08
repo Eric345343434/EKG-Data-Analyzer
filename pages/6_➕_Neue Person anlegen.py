@@ -2,6 +2,11 @@ import streamlit as st
 from function import person
 from PIL import Image
 
+# Überprüfung, ob der Benutzer eingeloggt ist
+if 'logged_in' not in st.session_state or not st.session_state.logged_in:
+    st.warning("Bitte loggen Sie sich zuerst ein!")
+    st.stop()
+
 st.title("Neue Person hinzufügen")
 
 # Eingabeformulare
