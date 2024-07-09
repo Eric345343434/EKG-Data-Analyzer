@@ -21,6 +21,7 @@ try:
 
         # Plot EKG data with peaks
     st.plotly_chart(ekgdata1.plot_ekg_with_peaks(user_input_ekg_start,user_input_ekg_end))
+    st.write("Derzeit ist der Ekg_Test mit der ID", st.session_state.current_ekg_id ,"von", st.session_state.current_user,"ausgewählt")
     st.plotly_chart(ekgdata1.plot_ekg_with_peaks_hr(user_input_ekg_start,user_input_ekg_end))
 except:
     st.title("EKG-Graph konnte nicht geladen werden!")
