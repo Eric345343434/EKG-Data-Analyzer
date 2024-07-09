@@ -3,6 +3,7 @@ from function import person,ekgdata
 from PIL import Image
 import matplotlib.pyplot as plt
 
+
 # Überprüfung, ob der Benutzer eingeloggt ist
 if 'logged_in' not in st.session_state or not st.session_state.logged_in:
     st.warning("Bitte loggen Sie sich zuerst ein!")
@@ -20,7 +21,7 @@ user_input_ekg_end= int(st.slider("Geben sie den End Wert des Plots an",0, len(e
 
     # Plot EKG data with peaks
 st.plotly_chart(ekgdata1.plot_ekg_with_peaks(user_input_ekg_start,user_input_ekg_end))
-st.plotly_chart(ekgdata1.estimate_hr_plot())
+st.plotly_chart(ekgdata1.plot_ekg_with_peaks_hr(user_input_ekg_start,user_input_ekg_end))
 #except:
     #st.title("EKG-Graph konnte nicht geladen werden!")
-   # st.header("Versuchen sie zuerst die Person und die Ekg-ID auszuwählen")
+    #st.header("Versuchen sie zuerst die Person und die Ekg-ID auszuwählen")

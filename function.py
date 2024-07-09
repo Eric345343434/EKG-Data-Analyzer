@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 from tinydb import TinyDB, Query
 from tinydb.table import Table, Document
-
+import plotly.graph_objects as go
 def hold_power(values, times, power_lv):
     held_time = []
     start = None
@@ -209,6 +209,26 @@ class ekgdata:
         fig = px.line(df, x='Time in ms', y='EKG in mV', title='EKG Data with Peaks')
         fig.add_scatter(x=df.loc[valid_peaks, 'Time in ms'], y=df.loc[valid_peaks, 'EKG in mV'], mode='markers', name='Peaks', marker=dict(color='red'))
         return fig
+    def plot_ekg_with_peaks_hr(self,start,end):
+        df = self.df.copy()[start:end]
+        df['Peaks'] = 0
+        valid_peaks = [p for p in self.peaks_index if p in df.index]
+        df.loc[valid_peaks, 'Peaks'] = 1
+        hr=[]
+        for z in range(0,int(len(valid_peaks)-10)):
+            time_differences = [valid_peaks[i] - valid_peaks[i - 1] for i in range(1+z, 10+z) if valid_peaks[i] - valid_peaks[i - 1] > 200]
+            if len(time_differences) > 0:
+                avg_time_diff = sum(time_differences) / len(time_differences)
+                avg_time_diff_s = avg_time_diff / 1000
+                heart_rate = 60 / avg_time_diff_s
+                if heart_rate/2 > int(self.estimate_hr(self.peaks)/2):
+                    
+                    hr.append(heart_rate/2)
+            print(hr)
+        fig = go.Figure()
+        fig.add_scatter(x=valid_peaks*2 +df["Time in ms"][0], y=hr, mode='lines', name='avg_heartrate', marker=dict(color='red'))
+        fig.update_layout(xaxis_title="Time (ms)", yaxis_title="Herzrate")
+        return fig
     
     @staticmethod
     def load_ekg_table() -> Table:
@@ -301,12 +321,14 @@ if __name__ == "__main__":
     print(ekgdata.load_ekg_table())
     print(ekgdata.get_ekg_ids_by_person_id(1))
     print('create EKGdata object')
-    ekg = ekgdata(2)
+    ekg = ekgdata(4)
     #print(ekg.__dict__)
     print(ekg.peaks[:15])
     print(ekg.estimate_hr(ekg.peaks))
     print(ekg.get_ids())
     print(ekg.time_dif())
+    ekg.plot_ekg_with_peaks_hr(0,1000000)
+    
     
 
 
