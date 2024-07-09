@@ -30,4 +30,4 @@ user_input_ekg_start_2= int(st.slider("Geben sie den Start Wert des Plots an",0,
 user_input_ekg_end_2= int(st.slider("Geben sie den End Wert des Plots an",0, len(ekgdata1.df["Time in ms"]),100000,step=10000,key="Slider4"))
 if user_input_ekg_start_2 < user_input_ekg_end_2:
     st.plotly_chart(ekgdata1.plot_ekg_with_peaks_hr(user_input_ekg_start_2,user_input_ekg_end_2))
-st.title("EKG-Graph konnte nicht geladen werden!")
+
