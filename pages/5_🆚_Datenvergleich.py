@@ -100,7 +100,7 @@ with col2:
 
      
 
-        # Plot EKG data with peaks
+# Plot EKG data with peaks
 st.session_state.user_input_ekg_start= int(st.slider("Geben sie den Start Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),0,step=100))
 st.session_state.user_input_ekg_end= int(st.slider("Geben sie den End Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),1000,step=100))
 
@@ -126,6 +126,8 @@ fig.add_scatter(x=df1.loc[valid_peaks_1, "Time_0"]-st.session_state.user_input_e
 fig.add_scatter(x=df2.loc[valid_peaks_2, "Time_0"]-st.session_state.user_input_ekg_start, y=df2.loc[valid_peaks_2, 'EKG in mV'], mode='markers', name='Peaks 2', marker=dict(color='tomato'))
 fig.update_layout(xaxis_title="Time (ms)", yaxis_title="EKG (mV)")
 st.plotly_chart(fig)
+st.write("EKG-Test 1 und Peaks 1 ist der Ekg_Test mit der ID", st.session_state.current_ekg_id_1 ,"von", st.session_state.current_user_1)
+st.write(" EKG-Test 2 und Peaks 2  ist der Ekg_Test mit der ID", st.session_state.current_ekg_id_2 ,"von", st.session_state.current_user_2)
 
 #Herzrate-Plot
 st.session_state.user_input_ekg_start_2= int(st.slider("Geben sie den Start Wert des Plots an",0, max([len(ekgdata1.df["Time in ms"]),len(ekgdata2.df["Time in ms"])]),0,key="slider3",step=1000))
@@ -164,3 +166,6 @@ fig2.update_layout(xaxis_title="Time (ms)", yaxis_title="Herzrate")
 fig2.add_scatter(x=df1_h.loc[valid_peaks_1_h, "Time_0"]-st.session_state.user_input_ekg_start_2, y=hr_1, mode='lines', name='Herzrate 1', marker=dict(color='darkred'))
 fig2.add_scatter(x=df2_h.loc[valid_peaks_2_h, "Time_0"]-st.session_state.user_input_ekg_start_2, y=hr_2, mode='lines', name='Herzrate 2', marker=dict(color='blue'))
 st.plotly_chart(fig2)
+
+st.write(" Herzrate 1  ist der Ekg_Test mit der ID", st.session_state.current_ekg_id_1 ,"von", st.session_state.current_user_1)
+st.write(" Herzrate 2  ist der Ekg_Test mit der ID", st.session_state.current_ekg_id_2 ,"von", st.session_state.current_user_2)

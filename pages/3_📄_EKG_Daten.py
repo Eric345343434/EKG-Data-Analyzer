@@ -8,6 +8,10 @@ if 'logged_in' not in st.session_state or not st.session_state.logged_in:
     st.warning("Bitte loggen Sie sich zuerst ein!")
     st.stop()
 
+if "current_user_id" not in st.session_state or not st.session_state.current_user_id:
+    st.warning("Versuchen sie zuerst die Person auszuwählen")
+    st.stop()
+
 try:
     st.session_state.current_ekg_list_id= ekgdata.get_ekg_ids_by_person_id(st.session_state.current_user_id)
     current_ekg_list =[]
