@@ -34,16 +34,19 @@ try:
     st.write("Derzeit ist der Ekg_Test mit der ID", st.session_state.current_ekg_id ,"von", st.session_state.current_user,"ausgewählt")
     
     
+    col1,col2 = st.columns(2)
+
+    with col1:
+        ekg_dict = ekg_data.get(doc_id=str(st.session_state.current_ekg_id))
+        st.write("Datum des Ekg-Tests =",ekg_dict["date"])
+        ekgdata1= ekgdata(st.session_state.current_ekg_id)
+        
+        
+    with col2:
+        peaks = ekgdata1.find_peaks()
+        st.write("Heartrate:", ekgdata.estimate_hr(peaks))
     
-    
-    ekg_dict = ekg_data.get(doc_id=str(st.session_state.current_ekg_id))
-    st.write("Datum des Ekg-Tests =",ekg_dict["date"])
-    
-    
-    ekgdata1= ekgdata(st.session_state.current_ekg_id)
-    st.write("Dauer des Ekg-Tests =",ekgdata1.calc_duration()*1000, "Millisekunden = ", ekgdata1.calc_duration(), "Sekunden = ", ekgdata1.calc_duration()/60, "Minuten")
-    peaks = ekgdata1.find_peaks()
-    st.write("Heartrate:", ekgdata.estimate_hr(peaks))
+    st.write("Dauer des Ekg-Tests =",round(ekgdata1.calc_duration()/60),"Minuten und", round(ekgdata1.calc_duration())-round(ekgdata1.calc_duration()/60)*60,"Sekunden")
 except: 
     st.title("EKG-Daten konnten nicht geladen werden!")
     st.header("Versuchen sie zuerst die Person auszuwählen")
