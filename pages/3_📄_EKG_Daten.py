@@ -44,7 +44,7 @@ try:
         
     with col2:
         peaks = ekgdata1.find_peaks()
-        st.write("Heartrate:", ekgdata.estimate_hr(peaks))
+        st.write("Heartrate:", round(ekgdata.estimate_hr(peaks)))
     
     st.write("Dauer des Ekg-Tests =",round(ekgdata1.calc_duration()/60),"Minuten und", round(ekgdata1.calc_duration())-round(ekgdata1.calc_duration()/60)*60,"Sekunden")
 except: 

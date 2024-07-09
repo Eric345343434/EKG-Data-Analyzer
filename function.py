@@ -199,7 +199,7 @@ class ekgdata:
         heart_rate = 60 / avg_time_diff_s
 
         return heart_rate
-
+ 
     def plot_ekg_with_peaks(self, start, end):
         df = self.df.copy()[start:end]
         df['Peaks'] = 0
@@ -269,6 +269,7 @@ class ekgdata:
     
 
     def df0(self):
+        """Returns the time by starting with 0"""
         time = self.df["Time in ms"]
         time_difference = time[1]-time[0]
         Time_0=[]
@@ -277,6 +278,7 @@ class ekgdata:
             i += time_difference
         return Time_0
     def time_dif(self):
+        """Returns the time difference between one index"""
         time = self.df["Time in ms"]
         time_difference = time[1]-time[0]
         return time_difference
