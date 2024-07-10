@@ -3,6 +3,7 @@ import plotly.express as px
 from tinydb import TinyDB, Query
 from tinydb.table import Table, Document
 import plotly.graph_objects as go
+import streamlit as st
 def hold_power(values, times, power_lv):
     held_time = []
     start = None
@@ -224,9 +225,10 @@ class ekgdata:
                 if heart_rate/2 > int(self.estimate_hr(self.peaks)/2):
                     
                     hr.append(heart_rate/2)
-            print(hr)
+
+        st.write("Herzrate=", round(self.estimate_hr(self.peaks)))
         fig = go.Figure()
-        fig.add_scatter(x=valid_peaks*2 +df["Time in ms"][0], y=hr, mode='lines', name='avg_heartrate', marker=dict(color='red'))
+        fig.add_scatter(x=valid_peaks*2 +df["Time in ms"][start], y=hr, mode='lines', name='avg_heartrate-plot', marker=dict(color='red'))
         fig.update_layout(xaxis_title="Time (ms)", yaxis_title="Herzrate")
         return fig
     

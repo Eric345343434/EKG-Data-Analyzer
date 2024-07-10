@@ -55,7 +55,6 @@ with col1:
     ekgdata1= ekgdata(st.session_state.current_ekg_id_1)
 
 
-        # Plot EKG data with peaks
     
            
 with col2: 
