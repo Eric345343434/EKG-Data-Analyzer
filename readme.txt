@@ -6,4 +6,3 @@
 -mit folgenden Zugangsdaten können Sie sich anmelden: 
 -Benutzername: "user1"
 -Passwort: "Bratwurst123"
--In dem Ordner Screenshots der App sind Bilder der App zu finden
